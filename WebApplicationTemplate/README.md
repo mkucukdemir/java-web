@@ -1,6 +1,6 @@
 # Web Application Template
 
-In this repository you will find out a skeleton for a simple web application composed of servlets and services. Basic configurations and building blocks are completed for developers to start implementing bussiness rules. If you would like to initiate a web application and avoid for devoting time to right down standard dependencies and configuration, Web Application Template is good for a starting point.
+In this project you will find out a skeleton for a simple web application composed of servlets and services. Basic configurations and building blocks are completed for developers to start implementing bussiness rules. If you would like to initiate a web application and avoid for devoting time to right down standard dependencies and configuration, Web Application Template is good for a starting point.
 For ease of development, no more XML files for configuration. Advantages of Servlet 3.0+ container will be taken.
 
 ## Version
