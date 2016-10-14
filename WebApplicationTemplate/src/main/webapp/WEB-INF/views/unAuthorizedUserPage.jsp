@@ -1,7 +1,6 @@
 <%-- 
     Document   : unAuthorizedUserPage
-    Created on : 19.Mar.2016, 14:47:21
-    Author     : Mehmet
+    Author     : mkucukdemir
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

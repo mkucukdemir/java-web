@@ -9,8 +9,8 @@ import com.smallfe.webapplicationtemplate.model.User;
 import java.util.List;
 
 /**
- *
- * @author mehmet
+ * Write short comment related with created class
+ * @author mkucukdemir
  */
 public interface ApplicationDao {
 

@@ -1,6 +1,6 @@
 <%-- 
     Document   : mainPage
-    Author     : Mehmet
+    Author     : mkucukdemir
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
