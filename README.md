@@ -2,7 +2,7 @@
 Servlets, Web Services
 will soon be available... (Repositories will be reorganized)
 ## Web Application Template
-Servlet written with Spring MVC + Security, Hibernate, JSTL, JQuery, Bootstrap dependencies. Find details in project folder.
+Servlet written with Spring MVC + Security, Hibernate, JSTL, JQuery, Bootstrap dependencies. Find details in project folder. By Web Service Integration branch, Web Application Template has been integrated with User Authentication Service and Role Management Service.
 ## UserAuthenticationWS
 SOAP Web Service
 ## UserAuthenticationWSC
