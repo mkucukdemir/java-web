@@ -6,6 +6,8 @@
 
 package com.smallfe.webapplicationtemplate.configuration;
 
+import com.smallfe.rolemanagementwsc.service.RoleManagementService;
+import com.smallfe.userauthenticationwsc.UserAuthenticationService;
 import com.smallfe.webapplicationtemplate.dao.ApplicationDao;
 import com.smallfe.webapplicationtemplate.dao.ApplicationDaoImpl;
 import java.util.Properties;
@@ -34,7 +36,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @ComponentScan("com.smallfe.webapplicationtemplate")
 @EnableTransactionManagement
 @EnableWebMvc
-@PropertySource("/WEB-INF/properties/oracle_jdbc.properties")
+@PropertySource("/WEB-INF/properties/jdbc.properties")
 public class ApplicationContextCongifuration extends WebMvcConfigurerAdapter {
     
     @Autowired
@@ -94,4 +96,15 @@ public class ApplicationContextCongifuration extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
     }
     
+    @Autowired
+    @Bean(name = "userAuthenticationService")
+    public UserAuthenticationService getUserAuthenticationService() {
+    	return new UserAuthenticationService();
+    }
+    
+    @Autowired
+    @Bean(name = "roleManagementService")
+    public RoleManagementService getRoleManagementService() {
+    	return new RoleManagementService();
+    }
 }
