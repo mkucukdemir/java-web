@@ -16,6 +16,13 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.soap.SOAPBinding;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 
 /**
  *
@@ -24,20 +31,31 @@ import javax.jws.soap.SOAPBinding;
 @WebService(serviceName = "UserAuthenticationWS")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public class UserAuthenticationWS {
-
+    
+    @Resource
+    private WebServiceContext context;
+    
     /**
      * Web service operation
      */
     @WebMethod(operationName = "isAuthorized")
     public Boolean isAuthorized(@WebParam(name = "username") String username, @WebParam(name = "password") String password) {
         try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            String URL = "jdbc:oracle:thin:@localhost:1521/orcl";
-            String USER = "JWAS";
-            String PASS = "JWAS_PASS";
+            MessageContext mc = context.getMessageContext();
+            ServletContext servletContext = (ServletContext) mc.get(MessageContext.SERVLET_CONTEXT);
+            
+            InputStream inputStream = servletContext.getResourceAsStream("/WEB-INF/properties/jdbc.properties");
+
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            
+            Class.forName(properties.getProperty("jdbc.driverClassName"));
+            String URL = properties.getProperty("jdbc.url");
+            String USER = properties.getProperty("jdbc.username");
+            String PASS = properties.getProperty("jdbc.password");
             Connection connection = DriverManager.getConnection(URL, USER, PASS);
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT 1 RESULT FROM APP_USER WHERE USERNAME='"+username+"' AND PASSWORD_DIGEST='"+password+"'");
+            ResultSet resultSet = statement.executeQuery("SELECT 1 RESULT FROM JWAS.APP_USER WHERE USERNAME='"+username+"' AND PASSWORD_DIGEST='"+password+"'");
             try {
                 while(resultSet.next()){
                     int supplierID = resultSet.getInt("RESULT");
@@ -48,7 +66,7 @@ public class UserAuthenticationWS {
                 Logger.getLogger(UserAuthenticationWS.class.getName()).log(Level.SEVERE, null, ex);
                 connection.close();
             }
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException | SQLException | IOException ex) {
             Logger.getLogger(UserAuthenticationWS.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;

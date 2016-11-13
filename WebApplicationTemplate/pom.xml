@@ -16,6 +16,7 @@
         <springsecurityframework.version>4.0.2.RELEASE</springsecurityframework.version>
         <hibernate.version>4.3.6.Final</hibernate.version>
         <oracle.version>12.1.0.2.0</oracle.version>
+        <h2.version>1.4.193</h2.version>
         <jstl.version>1.2</jstl.version>
         <jquery.version>2.1.4</jquery.version>
         <bootstrap.version>3.2.0</bootstrap.version>
@@ -84,13 +85,6 @@
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-
-        <!-- Oracle -->
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
-            <version>${oracle.version}</version>
-        </dependency>
         
         <!-- JSTL -->
         <dependency>
@@ -126,7 +120,50 @@
             <artifactId>bootstrap</artifactId>
             <version>${bootstrap.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.smallfe</groupId>
+            <artifactId>roleManagementWSC</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.smallfe</groupId>
+            <artifactId>userAuthenticationWSC</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>debug</id>
+            <properties>
+                <profile.datasource>h2</profile.datasource>
+            </properties>
+            <dependencies>
+                <!-- H2 -->
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <version>${h2.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>release</id>
+            <properties>
+                <profile.datasource>oracle</profile.datasource>
+            </properties>
+            <dependencies>
+                <!-- Oracle -->
+                <dependency>
+                    <groupId>com.oracle</groupId>
+                    <artifactId>ojdbc7</artifactId>
+                    <version>${oracle.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -172,6 +209,42 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>initialize</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <tasks>
+                                <delete file="src/main/webapp/WEB-INF/properties/jdbc.properties" />
+                                <copy file="src/main/webapp/WEB-INF/properties/${profile.datasource}_jdbc.properties" tofile="src/main/webapp/WEB-INF/properties/jdbc.properties" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>install</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <tstamp>
+                                    <format property="TODAY" pattern="ddMMyy" locale="tr,TR"/>
+                                </tstamp>
+                                <move file="${project.build.directory}/${project.name}-${project.version}.war" tofile="${project.build.directory}/${project.name}-${TODAY}.war"/>
+                                <echo message="War file has been renamed according to the current date. Now it's ready to deploy: ${project.build.directory}/${project.name}-${project.version}.war" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

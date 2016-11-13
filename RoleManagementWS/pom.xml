@@ -16,6 +16,7 @@
         <spring.ws.version>2.0.0.RELEASE</spring.ws.version>
         <hibernate.version>4.3.6.Final</hibernate.version>
         <oracle.version>12.1.0.2.0</oracle.version>
+        <h2.version>1.4.193</h2.version>
         <jackson.core.version>2.7.3</jackson.core.version>
     </properties>
     
@@ -155,13 +156,38 @@
                 <artifactId>hibernate-core</artifactId>
                 <version>${hibernate.version}</version>
         </dependency>
-        <!-- Oracle -->
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
-            <version>${oracle.version}</version>
-        </dependency>
     </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>debug</id>
+            <properties>
+                <profile.datasource>h2</profile.datasource>
+            </properties>
+            <dependencies>
+                <!-- H2 -->
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <version>${h2.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>release</id>
+            <properties>
+                <profile.datasource>oracle</profile.datasource>
+            </properties>
+            <dependencies>
+                <!-- Oracle -->
+                <dependency>
+                    <groupId>com.oracle</groupId>
+                    <artifactId>ojdbc7</artifactId>
+                    <version>${oracle.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -207,6 +233,26 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>initialize</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <tasks>
+                                <delete file="src/main/webapp/WEB-INF/properties/jdbc.properties" />
+                                <copy file="src/main/webapp/WEB-INF/properties/${profile.datasource}_jdbc.properties" tofile="src/main/webapp/WEB-INF/properties/jdbc.properties" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
