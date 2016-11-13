@@ -13,6 +13,7 @@ Web Application Template is a maven project with the following dependencies:
 <springsecurityframework.version>4.0.2.RELEASE</springsecurityframework.version>
 <hibernate.version>4.3.6.Final</hibernate.version>
 <oracle.version>12.1.0.2.0</oracle.version>
+<h2.version>1.4.193</h2.version>
 <jstl.version>1.2</jstl.version>
 <jquery.version>2.1.4</jquery.version>
 <bootstrap.version>3.2.0</bootstrap.version>
