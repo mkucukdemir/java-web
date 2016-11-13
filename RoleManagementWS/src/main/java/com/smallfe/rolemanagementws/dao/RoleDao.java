@@ -41,6 +41,7 @@ public class RoleDao {
             List<Role> roles = ((User)query.list().get(0)).getRoles();
             return roles;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

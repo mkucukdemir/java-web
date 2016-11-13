@@ -19,7 +19,7 @@ import javax.persistence.Table;
  * @author mkucukdemir
  */
 @Entity
-@Table(name = "APP_ROLE")
+@Table(name = "APP_ROLE", schema = "JWAS" )
 public class Role {
     @Id
     @Column( name = "ROLE_ID" )
@@ -28,8 +28,6 @@ public class Role {
     private String name;
     @Column( name = "DESCRIPTION" )
     private String description;
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy="roles")
-    private List<User> users;
     /**
      * @return the id
      */
@@ -70,19 +68,5 @@ public class Role {
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * @return the users
-     */
-    public List<User> getUsers() {
-        return users;
-    }
-
-    /**
-     * @param users the users to set
-     */
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 }

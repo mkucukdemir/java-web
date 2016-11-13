@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @author mkucukdemir
  */
 @Entity
-@Table( name = "APP_USER" )
+@Table( name = "APP_USER", schema = "JWAS" )
 public class User {
     @Id
     @Column( name = "USER_ID" )
@@ -38,7 +38,7 @@ public class User {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name="APP_USER_ROLES",
+        name="JWAS.APP_USER_ROLES",
         joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="USER_ID")},
         inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ROLE_ID")})
     private List<Role> roles;

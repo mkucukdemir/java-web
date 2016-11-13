@@ -27,10 +27,10 @@ import org.springframework.web.servlet.view.BeanNameViewResolver;
  * @author mkucukdemir
  */
 @Configuration
-@ComponentScan("com.smallfe.rolemanagement")
+@ComponentScan("com.smallfe.rolemanagementws")
 @EnableTransactionManagement
 @EnableWebMvc
-@PropertySource("/WEB-INF/properties/oracle_jdbc.properties")
+@PropertySource("/WEB-INF/properties/jdbc.properties")
 public class ApplicationConfiguration {
     
     @Autowired
@@ -72,7 +72,7 @@ public class ApplicationConfiguration {
     public SessionFactory getSessionFactory(DataSource dataSource) {
         LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
     	sessionBuilder.addProperties(getHibernateProperties());
-        sessionBuilder.scanPackages("com.smallfe.rolemanagement.model");
+        sessionBuilder.scanPackages("com.smallfe.rolemanagementws.model");
     	return sessionBuilder.buildSessionFactory();
     }
     
