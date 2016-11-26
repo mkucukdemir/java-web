@@ -3,6 +3,13 @@ Servlets, Web Services
 
 ## Web Application Template
 Servlet written with Spring MVC + Security, Hibernate, JSTL, JQuery, Bootstrap dependencies. Find details in project folder. By [Web-Service-Integration](https://github.com/mkucukdemir/java-web/tree/Web-Service-Integration) branch, [Web Application Template](https://github.com/mkucukdemir/java-web/tree/master/WebApplicationTemplate) has been integrated with [User Authentication Service](https://github.com/mkucukdemir/java-web/tree/master/UserAuthenticationWS) and [Role Management Service](https://github.com/mkucukdemir/java-web/tree/master/RoleManagementWS).
+```sh
+/**
+ * TODO
+ * UI Decorator - Sitemesh Integration
+ * Auditing and Logging - Hibernate Interceptor & Log4J Integration
+ */
+```
 ## UserAuthenticationWS
 * SOAP Web Service
 * Returns whether a user credential is authorized, or not
