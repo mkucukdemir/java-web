@@ -30,7 +30,7 @@ Client application for UserAuthenticationWS
 
 Dependencies
 ```sh
-<springframework.version>4.2.2.RELEASE</springframework.version>
+<springframework.version>4.3.18.RELEASE</springframework.version>
 <spring.ws.version>2.0.0.RELEASE</spring.ws.version>
 <hibernate.version>4.3.6.Final</hibernate.version>
 <oracle.version>12.1.0.2.0</oracle.version>
