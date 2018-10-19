@@ -13,7 +13,7 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springframework.version>4.3.18.RELEASE</springframework.version>
-        <springsecurityframework.version>4.0.2.RELEASE</springsecurityframework.version>
+        <springsecurityframework.version>4.2.8.RELEASE</springsecurityframework.version>
         <hibernate.version>4.3.6.Final</hibernate.version>
         <oracle.version>12.1.0.2.0</oracle.version>
         <h2.version>1.4.193</h2.version>
