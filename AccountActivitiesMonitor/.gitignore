@@ -20,6 +20,15 @@ target/
 *.xls
 *.xlsx
 
+# JSON Files #
+*.json
+
 # Content of Import Directory #
+*/*/import/*
 */import/*
 import/*
+
+# Content of Export Directory #
+*/*/export/*
+*/export/*
+export/*
