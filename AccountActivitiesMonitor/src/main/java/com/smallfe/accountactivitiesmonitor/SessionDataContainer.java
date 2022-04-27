@@ -67,4 +67,9 @@ public class SessionDataContainer {
         sessionData.get(sessionId).addOrModify(category); 
     }
     
+    public void initIfNotExists(String sessionId) {
+        if(sessionData.get(sessionId)==null)
+            sessionData.put(sessionId, new SessionData());
+    }
+    
 }

@@ -5,9 +5,8 @@
  */
 package com.smallfe.accountactivitiesmonitor.parser;
 
-import com.smallfe.accountactivitiesmonitor.dto.AccountActivity;
 import com.smallfe.accountactivitiesmonitor.dto.AccountActivityFile;
-import java.util.List;
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -17,6 +16,6 @@ import java.util.Map;
 public interface ExcelParser {
     
     public Map<Integer,String> parseTitle(String filePath);
-    public void collectActivities(String sessionId,String filePath);
+    public void collectActivities(String sessionId,AccountActivityFile accountActivityFile);
     
 }

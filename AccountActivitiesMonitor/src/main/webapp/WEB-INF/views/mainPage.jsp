@@ -34,9 +34,9 @@
         <title>Account Activities Monitor</title>
         <script>
             $(document).ready(function () {
-                $("#accountActivityTitleMappingForm").hide();
-                $("#accountactivitiestablediv").hide();
-                $("#filterlistdiv").hide();
+                // Show Data Table Division
+                $("#accountactivitiestablediv").show();
+                // Datatable defn
                 $('#accountActivitiesTable').DataTable({
                     info:     true,
                     ordering: true,
@@ -69,128 +69,15 @@
                         }
                     ]
                 });
-                $( "form" ).submit(function( event ) {
-                    event.preventDefault();
-                    var formData;
-                    var formURL;
-                    var formId=$(this).attr("id");
-                    switch(formId){
-                        case "accountActivityFileForm":
-                            formData = {path: $('#cardfilepath').val(),titleRow: $('#cardtitlerow').val(),numOfColumns: $('#cardnumofcolumns').val()};
-                            formURL = "ajax/uploadAccountActivityFile";
-                            break;
-                        case "accountActivityTitleMappingForm":
-                            formData = {filePath: $('#cardfilepath').val(),timestampIndex: $("#inputTimestamp").val(),infoIndex: $("#inputInfo").val(),paymentIndex: $("#inputPayment").val()};
-                            formURL = "ajax/setAccountActivityTitleMapping";
-                            break;
-                        default:
-                    }
-                    $.ajax({
-                        type: "POST",
-                        contentType: "application/json",
-                        url: formURL,
-                        data: JSON.stringify(formData),
-                        dataType: 'json',
-                        timeout: 600000,
-                        beforeSend: function (xhr) {
-                            switch(formId){
-                                case "accountActivityFileForm":
-                                    $("#accountActivityFileForm").slideUp();
-                                    break;
-                                case "accountActivityTitleMappingForm":
-                                    $("#accountActivityTitleMappingForm").slideUp();
-                                    break;
-                                default:
-                            }
-                        },
-                        success: function (data){
-                            switch(formId){
-                                case "accountActivityFileForm":
-                                    $('#cardtitlerow').val('');
-                                    $('#cardnumofcolumns').val('');
-                                    $(".custom-file-input").siblings(".custom-file-label").removeClass("selected").html('Choose file');
-                                    for (var key in data) {
-                                        $('#inputTimestamp').append($('<option>', {
-                                            value: key,
-                                            text: data[key]
-                                        }));
-                                        $('#inputInfo').append($('<option>', {
-                                            value: key,
-                                            text: data[key]
-                                        }));
-                                        $('#inputPayment').append($('<option>', {
-                                            value: key,
-                                            text: data[key]
-                                        }));
-                                    }
-                                    $("#accountActivityTitleMappingForm").slideDown();
-                                    break;
-                                case "accountActivityTitleMappingForm":
-                                    $('#cardfilepath').val('');
-                                    $('#inputTimestamp option:not(:first)').remove();
-                                    $('#inputInfo option:not(:first)').remove();
-                                    $('#inputPayment option:not(:first)').remove();
-                                    $("#accountActivityFileForm").slideDown();
-                                    break;
-                                default:
-                            }
-                        },
-                        error: function (e) {
-                            console.log("Error: " + e);
-                            switch(formId){
-                                case "accountActivityFileForm":
-                                    $("#accountActivityFileForm").slideDown();
-                                    break;
-                                case "accountActivityTitleMappingForm":
-                                    $("#accountActivityTitleMappingForm").slideDown();
-                                    break;
-                                default:
-                            }
-                        },
-                        complete: function (xhr){
-                            switch(formId){
-                                case "accountActivityFileForm":
-                                    break;
-                                case "accountActivityTitleMappingForm":
-                                    break;
-                                default:
-                            }
-                        }
-                    });
+                // Push data in table
+                var data= ${data};
+                $('#accountActivitiesTable').DataTable().clear().draw();
+                $('#accountActivitiesTable').DataTable().rows.add(data["activities"]).columns.adjust().draw();
+                $("#accountactivitiestablediv").slideDown();
+                $(data["categories"]).each(function(index,item){
+                    $('#filterlistgroup').append('<button type="button" class="list-group-item list-group-item-action searchbuilderrebuilder" key="'+item.name+'">'+item.name+'<span class="badge badge-primary badge-pill float-right">0</span></button>');
                 });
-                $(".custom-file-input").on("change", function() {
-                    var fileName = $(this).val().split("\\").pop();
-                    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-                });
-                $('#listCategoriesAndActivitiesButton').click(function () {
-                    $.ajax({
-                        type: "POST",
-                        contentType: "application/json",
-                        url: "ajax/listCategoriesAndActivities",
-                        data: JSON.stringify(''),
-                        dataType: 'json',
-                        timeout: 600000,
-                        beforeSend: function (xhr) {
-                            $("#carddiv").slideUp();
-                        },
-                        success: function (data){
-                            $('#accountActivitiesTable').DataTable().clear().draw();
-                            $('#accountActivitiesTable').DataTable().rows.add(data["activities"]).draw();
-                            $("#accountactivitiestablediv").slideDown();
-                            $(data["categories"]).each(function(index,item){
-                                $('#filterlistgroup').append('<button type="button" class="list-group-item list-group-item-action searchbuilderrebuilder" key="'+item.name+'">'+item.name+'<span class="badge badge-primary badge-pill float-right">0</span></button>');
-                            });
-                            $('#filterlistdiv').slideDown();
-                        },
-                        error: function (e) {
-                            $("#carddiv").slideDown();
-                            $("#accountactivitiestablediv").slideUp();
-                        },
-                        complete: function (xhr){
-
-                        }
-                    });
-                });
+                // Action when a category has been clicked
                 $(document).on('click','button.searchbuilderrebuilder',function () {
                     var filtername = $(this).attr('key');
                     var button = $(this);
@@ -214,6 +101,7 @@
                         }
                     });
                 });
+                // Autocomplete by existing categorynames
                 $("#categoryName").autocomplete({
                     source: function (request, response) {
                         $.ajax({
@@ -232,6 +120,7 @@
                     },
                     minLength: 3
                 });
+                // Save category
                 $('#addCategoryButton').click(function(){
                     var formData = {
                         name: $("#categoryName").val(),
@@ -252,7 +141,7 @@
                             $('#categoryName').val('');
                             $('#accountActivitiesTable').DataTable().searchBuilder.rebuild();
                             $('#accountActivitiesTable').DataTable().clear().draw();
-                            $('#accountActivitiesTable').DataTable().rows.add(data["activities"]).draw();
+                            $('#accountActivitiesTable').DataTable().rows.add(data["activities"]).columns.adjust().draw();
                             $('#filterlistgroup').append('<button type="button" class="list-group-item list-group-item-action searchbuilderrebuilder" key="'+formData["name"]+'">'+formData["name"]+'<span class="badge badge-primary badge-pill float-right">'+formData["accountActivityIndexes"].length+'</span></button>');
                             $('#filterlistdiv').slideDown();
                         },
@@ -264,6 +153,7 @@
                         }
                     });
                 });
+                // Export as JSON
                 $('#savefiltersbutton').click(function(){
                     $.ajax({
                         type: "GET",
@@ -326,66 +216,6 @@
         </nav>
         <div class="content">
             <div class="container">
-                <div id="carddiv">
-                    <h4>Write down some properties and browse the account activities
-                        excel file. Properties depend on file export format of the banks.</h4>
-                    <div class="card-columns d-flex justify-content-center">
-                        <div class="card card-custom box-shadow">
-                            <div class="card-header">
-                                <h5 class="my-0 font-weight-normal">File Properties</h5>
-                            </div>
-                            <div class="card-body d-flex flex-column">
-                                <form id="accountActivityFileForm">
-                                    <div class="form-group row">
-                                        <label class="col-sm-8 col-form-label" for="cardtitlerow">Row Number of Titles</label>
-                                        <div class="col-sm-4"><input class="form-control" type="text" id="cardtitlerow" name="titlerow" required></div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-8 col-form-label" for="cardnumofcolumns">Number of Columns</label>
-                                        <div class="col-sm-4"><input class="form-control" type="text" placeholder="" id="cardnumofcolumns" name="numofcolumns" required></div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="cardcustomFile" onchange="$(this).parent().parent().find('.form-control').val($(this).val());" style="display: none;">
-                                            <label class="custom-file-label" for="cardcustomFile">Choose file</label>
-                                            <input type="hidden" class="form-control" name="filepath" id="cardfilepath" />
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-primary btn-sm btn-block" type="submit">+ Add</button>
-                                </form>
-                                <form id="accountActivityTitleMappingForm">
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="inputTimestamp">Timestamp</label>
-                                        <div class="col-sm-10">
-                                            <select id="inputTimestamp" name="timestamp" class="form-control" required>
-                                                <option selected>Choose...</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="inputInfo">Info</label>
-                                        <div class="col-sm-10">
-                                            <select id="inputInfo" name="info" class="form-control" required>
-                                                <option selected>Choose...</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="inputPayment">Payment</label>
-                                        <div class="col-sm-10">
-                                            <select id="inputPayment" name="payment" class="form-control" required>
-                                                <option selected>Choose...</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-primary btn-sm btn-block" type="submit">Match Titles</button>
-                                </form> 
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-primary btn-sm btn-block" type="button" id="listCategoriesAndActivitiesButton">Done >></button>
-                </div>
-
                 <div id="accountactivitiestablediv">
                     <div class="row" >
                         <div class="col-md-12">

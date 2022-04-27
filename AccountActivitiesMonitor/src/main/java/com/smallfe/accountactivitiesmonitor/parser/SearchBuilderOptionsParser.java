@@ -34,7 +34,7 @@ public class SearchBuilderOptionsParser {
         
         try {
             
-            Resource resource = new ClassPathResource("criterias.json");
+            Resource resource = new ClassPathResource(classPathResource);
             InputStream resourceInputStream = resource.getInputStream();
             Reader reader = new InputStreamReader(resourceInputStream, Charset.forName("UTF-8"));
 

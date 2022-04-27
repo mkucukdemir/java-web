@@ -16,11 +16,21 @@ public class AccountActivityTitleMapping {
     private Integer infoIndex;
     private Integer paymentIndex;
 
+    public AccountActivityTitleMapping() {
+    }
+
+    public AccountActivityTitleMapping(String filePath, Integer timestampIndex, Integer infoIndex, Integer paymentIndex) {
+        this.filePath = filePath;
+        this.timestampIndex = timestampIndex;
+        this.infoIndex = infoIndex;
+        this.paymentIndex = paymentIndex;
+    }
+
     /**
      * @return the filePath
      */
     public String getFilePath() {
-        return this.filePath.replace("fakepath", "AccountActivitiesMonitor");
+        return filePath.substring(filePath.lastIndexOf("\\"));
     }
 
     /**

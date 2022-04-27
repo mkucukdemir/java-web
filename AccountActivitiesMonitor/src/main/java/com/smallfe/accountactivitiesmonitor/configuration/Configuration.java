@@ -5,13 +5,18 @@
  */
 package com.smallfe.accountactivitiesmonitor.configuration;
 
+import com.smallfe.accountactivitiesmonitor.dto.AccountActivityFile;
+import com.smallfe.accountactivitiesmonitor.dto.Category;
+import java.util.List;
+
 /**
  *
  * @author mehmet.kucukdemir
  */
 public interface Configuration {
     public void init();
-    public String getProjectDirFullPath();
-    public String getImportDirFullPath();
-    public String getExportDirFullPath();
+    public String getImportDirPath();
+    public String getExportDirPath();
+    public List<AccountActivityFile> getImportAccountActivitiesFileProperties();
+    public List<Category> getCategoriesInClassPathResource();
 }

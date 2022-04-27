@@ -5,6 +5,12 @@
  */
 package com.smallfe.accountactivitiesmonitor.dto;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 /**
  *
  * @author mehmet.kucukdemir
@@ -12,15 +18,21 @@ package com.smallfe.accountactivitiesmonitor.dto;
 public class AccountActivityFile {
     
     private String path;
+    private String fileName;
     private int titleRow;
     private int numOfColumns;
     private AccountActivityTitleMapping titleMapping;
+
+    public AccountActivityFile(String path) {
+        this.path = path;
+        this.fileName = path.substring(path.lastIndexOf("\\")+1);
+    }
 
     /**
      * @return the path
      */
     public String getPath() {
-        return path.replace("fakepath", "AccountActivitiesMonitor");
+        return "import\\" + fileName;
     }
 
     /**

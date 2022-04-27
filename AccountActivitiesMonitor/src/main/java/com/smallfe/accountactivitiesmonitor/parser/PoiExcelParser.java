@@ -7,6 +7,7 @@ package com.smallfe.accountactivitiesmonitor.parser;
 
 import com.smallfe.accountactivitiesmonitor.SessionDataContainer;
 import com.smallfe.accountactivitiesmonitor.dto.AccountActivity;
+import com.smallfe.accountactivitiesmonitor.dto.AccountActivityFile;
 import com.smallfe.accountactivitiesmonitor.dto.AccountActivityTitleMapping;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 
 /**
@@ -56,11 +59,12 @@ public class PoiExcelParser implements ExcelParser {
     }
 
     @Override
-    public Map<Integer, String> parseTitle(String filePath) {
+    public Map<Integer, String> parseTitle(String resourceFilePath) {
         
         Map<Integer,String> titles = new HashMap<>();
         try {
-            Workbook workbook = WorkbookFactory.create(new File(filePath));
+            Resource resource = new ClassPathResource(resourceFilePath);
+            Workbook workbook = WorkbookFactory.create(resource.getFile());
             Sheet sheet = workbook.getSheetAt(0);
             Row row = sheet.getRow(titleRow);
             for(int j = 0;j<numberOfColumns;j++){
@@ -77,9 +81,9 @@ public class PoiExcelParser implements ExcelParser {
     }
 
     @Override
-    public void collectActivities(String sessionId, String filePath) {
+    public void collectActivities(String sessionId,AccountActivityFile accountActivityFile) {
         
-        List<AccountActivity> activities = parseFile(sessionId,filePath);
+        List<AccountActivity> activities = parseFile(sessionId,accountActivityFile);
         
         SessionDataContainer.getInstance().getSessionData().get(sessionId).getAccountActivities().addAll(activities);
 
@@ -97,15 +101,17 @@ public class PoiExcelParser implements ExcelParser {
         
     }
 
-    private List<AccountActivity> parseFile(String sessionId, String filePath) {
+    private List<AccountActivity> parseFile(String sessionId, AccountActivityFile accountActivityFile) {
         
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         int sizeOfAccountActivities = SessionDataContainer.getInstance().getSessionData().get(sessionId).getAccountActivities().size();
-        AccountActivityTitleMapping titleMapping = SessionDataContainer.getInstance().getSessionData().get(sessionId).getAccountActivityFiles().get(filePath).getTitleMapping();
+        AccountActivityTitleMapping titleMapping = accountActivityFile.getTitleMapping();
 
         List<AccountActivity> activities = new ArrayList();
         try {
-            Workbook workbook = WorkbookFactory.create(new File(filePath));
+            // import // filename
+            Resource resource = new ClassPathResource(accountActivityFile.getPath());
+            Workbook workbook = WorkbookFactory.create(resource.getFile());
             Sheet sheet = workbook.getSheetAt(0);
             for (Row row : sheet) {
                 if(!isValid(row))

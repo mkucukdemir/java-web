@@ -15,3 +15,11 @@ target/
 *.jar
 *.war
 *.ear
+
+# Excel Files #
+*.xls
+*.xlsx
+
+# Content of Import Directory #
+*/import/*
+import/*

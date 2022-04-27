@@ -5,6 +5,9 @@
  */
 package com.smallfe.accountactivitiesmonitor;
 
+import com.smallfe.accountactivitiesmonitor.configuration.Configuration;
+import com.smallfe.accountactivitiesmonitor.configuration.ConfigurationFactory;
+import com.smallfe.accountactivitiesmonitor.configuration.ConfigurationType;
 import com.smallfe.accountactivitiesmonitor.dto.AccountActivity;
 import com.smallfe.accountactivitiesmonitor.dto.AccountActivityFile;
 import com.smallfe.accountactivitiesmonitor.dto.Category;
@@ -24,12 +27,14 @@ public class SessionData {
     private List<AccountActivity> accountActivities;
     private Map<Date,List<AccountActivity>> accountActivitiesByDate;
     private Map<String,Category> categories;
+    private Configuration configuration;
 
     public SessionData() {
         this.accountActivityFiles = new HashMap<>();
         this.accountActivities = new ArrayList<>();
         this.accountActivitiesByDate = new HashMap<>();
         this.categories = new HashMap<>();
+        this.configuration = ConfigurationFactory.createConfiguration(ConfigurationType.JSON_FILE);
     }
 
     /**
@@ -89,14 +94,14 @@ public class SessionData {
     }
 
     void addOrModify(AccountActivityFile file) {
-        if(this.accountActivityFiles.containsKey(file.getPath())){
-            this.accountActivityFiles.remove(file.getPath());
+        if(this.accountActivityFiles.containsKey(this.configuration.getImportDirPath() + "\\" + file.getPath())){
+            this.accountActivityFiles.remove(this.configuration.getImportDirPath() + "\\" + file.getPath());
         }
-        this.accountActivityFiles.put(file.getPath(), file);
+        this.accountActivityFiles.put(this.configuration.getImportDirPath() + "\\" + file.getPath(), file);
     }
 
     boolean containsAccountActivityFiles(String filePath) {
-        return this.accountActivityFiles.containsKey(filePath);
+        return this.accountActivityFiles.containsKey(this.configuration.getImportDirPath() + "\\" + filePath);
     }
 
     void addOrModify(Category category) {
@@ -104,6 +109,20 @@ public class SessionData {
             this.categories.remove(category.getName());
         }
         this.categories.put(category.getName(), category);
+    }
+
+    /**
+     * @return the configuration
+     */
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * @param configuration the configuration to set
+     */
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
         
 }

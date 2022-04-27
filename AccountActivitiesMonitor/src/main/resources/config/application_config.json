@@ -1,5 +1,9 @@
 {
-  "project_dir_fullpath": "C:\AccountActivitiesMonitor\",
-  "import_dir_relativepath": "src\main\resources\import",
-  "import_dir_relativepath": "src\main\resources\export"
+  "importDirRelativePath": "import",
+  "exportDirRelativePath": "export",
+  "importAccountActivitiesFileProperties": [
+    {"fileName": "Hesap Hareketleri_4_5.xlsx", "titleRow":4,"numOfColumns":5,"titleMapping":{"timestampIndex":0,"infoIndex":1,"paymentIndex":2}},
+    {"fileName": "HesapEkstre_7_17.xlsx", "titleRow":7,"numOfColumns":17,"titleMapping":{"timestampIndex":3,"infoIndex":16,"paymentIndex":6}},
+    {"fileName": "HesapHareketleriZir_8_4.xls", "titleRow":8,"numOfColumns":4,"titleMapping":{"timestampIndex":0,"infoIndex":1,"paymentIndex":2}}
+  ]
 }

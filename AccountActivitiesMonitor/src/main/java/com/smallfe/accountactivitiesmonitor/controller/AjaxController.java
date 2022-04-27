@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -44,54 +46,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping ("/ajax/")
 public class AjaxController {
     
-    @PostMapping(path="/uploadAccountActivityFile",produces = "text/plain;charset=UTF-8")
-    public @ResponseBody ResponseEntity<byte[]> handleUploadAccountActivity(HttpSession session,@RequestBody AccountActivityFile file) throws IOException {
-        SessionDataContainer.getInstance().putIfNotExists(session.getId(),file);
-        
-        ExcelParser excelParser = ExcelParserFactory.createExcelParser(file.getTitleRowIndex(),file.getNumOfColumns(),ExcelParserType.POI_EXCEL_PARSER);
-        Map<Integer,String> titles = excelParser.parseTitle(file.getPath());
-        
-        Gson gson = new Gson();
-        return new ResponseEntity<>(gson.toJson(titles).getBytes("UTF-8"), HttpStatus.OK);
-    }
-    
-    @PostMapping(path="/setAccountActivityTitleMapping",produces = "text/plain;charset=UTF-8")
-    public @ResponseBody ResponseEntity<byte[]> handleMatchTitles(HttpSession session,@RequestBody AccountActivityTitleMapping mapping) throws IOException {
-        
-        Gson gson = new Gson();
-        Map<String,Object> data = new HashMap<>();
-        
-        if(SessionDataContainer.getInstance().isAccountActivityFileExists(session.getId(),mapping.getFilePath())){
-            SessionDataContainer.getInstance().getSessionData().get(session.getId()).getAccountActivityFiles().get(mapping.getFilePath()).setTitleMapping(mapping);
-        
-            ExcelParser excelParser = ExcelParserFactory.createExcelParser(
-                    SessionDataContainer.getInstance().getTitleRow(session.getId(),mapping.getFilePath()),
-                    SessionDataContainer.getInstance().getNumOfColumns(session.getId(),mapping.getFilePath()),
-                    ExcelParserType.POI_EXCEL_PARSER);
-
-            excelParser.collectActivities(session.getId(),mapping.getFilePath());
-            data.put("status", "Success");
-        }
-        else{
-            data.put("status", "Error");
-        }
-        
-        return new ResponseEntity<>(gson.toJson(data).getBytes("UTF-8"), HttpStatus.OK);
-        
-    }
-    
     @PostMapping(path="/listCategoriesAndActivities",produces = "text/plain;charset=UTF-8")
     public @ResponseBody ResponseEntity<byte[]> handleListCategoriesAndActivities(HttpSession session) throws IOException {
         
         Gson gson = new Gson();
         Map<String,Object> data = new HashMap<>();
         
-        SearchBuilderOptionsParser optionsParser = new SearchBuilderOptionsParser();
-        List<Category> categoriesInClassPathResource = optionsParser.parseFromClassPathResource("criterias.json");
-        for (Category category : categoriesInClassPathResource) {
-            SessionDataContainer.getInstance().getSessionData().get(session.getId()).getCategories().put(category.getName(), category);
+        try {
+            SearchBuilderOptionsParser optionsParser = new SearchBuilderOptionsParser();
+            List<Category> categoriesInClassPathResource = optionsParser.parseFromClassPathResource(SessionDataContainer.getInstance().getSessionData().get(session.getId()).getConfiguration().getImportDirPath() + "\\criterias.json");
+            for (Category category : categoriesInClassPathResource) {
+                SessionDataContainer.getInstance().getSessionData().get(session.getId()).getCategories().put(category.getName(), category);
+            }
+            data.put("categories",categoriesInClassPathResource);
+        } catch (Exception e) {
+            Logger.getLogger(AjaxController.class.getName()).log(Level.SEVERE, null, e);
         }
-        data.put("categories",categoriesInClassPathResource);
+        
         
         data.put("activities", SessionDataContainer.getInstance().getSessionData().get(session.getId()).getAccountActivities());
         return new ResponseEntity<>(gson.toJson(data).getBytes("UTF-8"), HttpStatus.OK);
