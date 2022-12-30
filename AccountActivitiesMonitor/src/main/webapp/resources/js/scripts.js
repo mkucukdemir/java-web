@@ -4,6 +4,10 @@
  * and open the template in the editor.
  */
 
+// Initialize rendering for each graph with no data
+
+// Each graph should be request their own data
+
 $.getJSON("ajax/viewdashboard", function (response) {
     
     locales = [
@@ -17,6 +21,19 @@ $.getJSON("ajax/viewdashboard", function (response) {
             }
         }
     ];
+    
+    noData = {
+        text: "Yükleniyor...",
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,  
+        offsetY: 0,  
+        style: {  
+          color: "#dedede",  
+          fontSize: '18px',  
+          fontFamily: "Helvetica"  
+        }
+    };
     
     // generate charts - sparklines and line graphs
     $.each( response.monthly, function( key, category ) {
@@ -43,9 +60,7 @@ $.getJSON("ajax/viewdashboard", function (response) {
                 opacity: 1,
             },
             series: [],
-            noData: {
-                text: 'Loading...'
-            },
+            noData: noData,
             yaxis: {
                 min: 0,
                 labels: {
@@ -154,9 +169,7 @@ $.getJSON("ajax/viewdashboard", function (response) {
                 format: 'dd MMM yyyy'
             }
         },
-        noData: {
-            text: 'Loading...'
-        }
+        noData: noData
     }
 
     var optionsLineMonthly = {
@@ -217,9 +230,7 @@ $.getJSON("ajax/viewdashboard", function (response) {
                 format: 'MMM yyyy'
             }
         },
-        noData: {
-            text: 'Loading...'
-        }
+        noData: noData
     }
 
     var optionsLineYearly = {
@@ -280,9 +291,7 @@ $.getJSON("ajax/viewdashboard", function (response) {
                 format: 'yyyy'
             }
         },
-        noData: {
-            text: 'Loading...'
-        }
+        noData: noData
     }
 
     var chartLineDaily = new ApexCharts(document.querySelector('#line_daily'), optionsLineDaily);

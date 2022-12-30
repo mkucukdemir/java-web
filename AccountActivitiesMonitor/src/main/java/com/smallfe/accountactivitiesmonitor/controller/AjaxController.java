@@ -34,6 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -142,8 +143,15 @@ public class AjaxController {
         
         dashboardData.prepareFor(SessionDataContainer.getInstance().getSessionData().get(session.getId()));
         
+        // daily : [...name-data for all class...], monthly : [...name-data for all class...], yearly : [...name-data for all class...]
         return new ResponseEntity<>(gson.toJson(dashboardData).getBytes("UTF-8"), HttpStatus.OK);
         
     }
     
+    @GetMapping(path = "/viewdashboard/{key}",produces = "text/plain;charset=UTF-8")
+    public @ResponseBody ResponseEntity<byte[]> handleGraphByKey(HttpSession session,@PathVariable String key) {
+        // Get data from session
+        // Prepare JSON response for the graph
+        return null;
+    }
 }
