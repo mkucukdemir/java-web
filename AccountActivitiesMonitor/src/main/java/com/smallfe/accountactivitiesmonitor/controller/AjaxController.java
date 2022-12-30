@@ -19,7 +19,9 @@ import com.smallfe.accountactivitiesmonitor.parser.SearchBuilderOptionsParser;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +135,10 @@ public class AjaxController {
     @GetMapping(path="/viewdashboard",produces = "text/plain;charset=UTF-8")
     public @ResponseBody ResponseEntity<byte[]> handleViewDashboard(HttpSession session) throws UnsupportedEncodingException, ParseException {
         Gson gson = new Gson();
-        DashboardData dashboardData = new DashboardData("01/01/2019","22/02/2022");
+        String startDate = "01/01/2019";
+        Date today = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyy");
+        DashboardData dashboardData = new DashboardData(startDate,format.format(today));
         
         dashboardData.prepareFor(SessionDataContainer.getInstance().getSessionData().get(session.getId()));
         

@@ -6,6 +6,18 @@
 
 $.getJSON("ajax/viewdashboard", function (response) {
     
+    locales = [
+        {
+            name: 'tr',
+            options: {
+                months: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+                shortMonths: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
+                days: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+                shortDays: ['Pzr', 'Pzt', 'Sal', 'Çrş', 'Prş', 'Cum', 'Cmt'],
+            }
+        }
+    ];
+    
     // generate charts - sparklines and line graphs
     $.each( response.monthly, function( key, category ) {
         if(key%3 === 0)
@@ -14,6 +26,8 @@ $.getJSON("ajax/viewdashboard", function (response) {
         
         new ApexCharts(document.querySelector("#spark"+key), {
             chart: {
+                defaultLocale: 'tr',
+                locales: locales,
                 id: 'sparkline'+key,
                 group: 'sparklines',
                 type: 'area',
@@ -37,7 +51,8 @@ $.getJSON("ajax/viewdashboard", function (response) {
                 labels: {
                     formatter: function (value) {
                         return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(value/100);
-                    }
+                    },
+                    minWidth: 40
                 }
             },
             xaxis: {
@@ -79,6 +94,8 @@ $.getJSON("ajax/viewdashboard", function (response) {
     var optionsLineDaily = {
         series: [],
         chart: {
+            defaultLocale: 'tr',
+            locales: locales,
             type: 'area',
             stacked: false,
             height: 350,
@@ -115,7 +132,8 @@ $.getJSON("ajax/viewdashboard", function (response) {
             labels: {
                 formatter: function (value) {
                     return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(value/100);
-                }
+                },
+                minWidth: 40
             },
             title: {
                 text: 'Amount(TL/d)'
@@ -144,6 +162,8 @@ $.getJSON("ajax/viewdashboard", function (response) {
     var optionsLineMonthly = {
         series: [],
         chart: {
+            defaultLocale: 'tr',
+            locales: locales,
             type: 'area',
             stacked: false,
             height: 350,
@@ -180,7 +200,8 @@ $.getJSON("ajax/viewdashboard", function (response) {
             labels: {
                 formatter: function (value) {
                     return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(value/100);
-                }
+                },
+                minWidth: 40
             },
             title: {
                 text: 'Amount(TL/M)'
@@ -204,6 +225,8 @@ $.getJSON("ajax/viewdashboard", function (response) {
     var optionsLineYearly = {
         series: [],
         chart: {
+            defaultLocale: 'tr',
+            locales: locales,
             type: 'area',
             stacked: false,
             height: 350,
@@ -240,7 +263,8 @@ $.getJSON("ajax/viewdashboard", function (response) {
             labels: {
                 formatter: function (value) {
                     return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(value/100);
-                }
+                },
+                minWidth: 40
             },
             title: {
                 text: 'Amount(TL/Y)'
